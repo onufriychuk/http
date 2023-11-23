@@ -1,5 +1,7 @@
 package ru.otus.java.basic.http;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -7,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Request {
+    private static final Logger logger = LogManager.getLogger(Request.class.getName());
     private String uri;
     private String raw;
     private Map<String, String> params;
@@ -16,7 +19,7 @@ public class Request {
     }
 
     public Request(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte[2048];
+        byte[] buffer = new byte[4096];
         int n = inputStream.read(buffer);
         this.raw = new String(buffer, 0, n);
         this.uri = parseUri(raw);
@@ -51,9 +54,7 @@ public class Request {
     }
 
     public void show() {
-        System.out.println("Запрос:");
-        System.out.println("uri: " + uri);
-        System.out.println("params: " + params);
+        logger.debug("Запрос: uri: " + uri + "params: " + params);
     }
 
     public String getParam(String key) {
